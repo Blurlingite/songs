@@ -4,16 +4,35 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 class SongList extends Component {
+  // a helper method to loop through (or map over) the list of songs and format them into JSX and return that JSX
+  renderList() {
+    // The 1st "return" returnd the JSX
+    // The 2nd "return" returns the format of the JSX. Without this you'll get an error
+    return this.props.songs.map(song => {
+      return (
+        // These classNames are taken from the semantic ui css file you linked in your index.html file
+        <div className="item" key={song.title}>
+          <div className="right floated content">
+            <button className="ui button primary">Select</button>
+          </div>
+
+          <div className="content">{song.title}</div>
+        </div>
+      );
+    });
+  }
   render() {
-    return <div>Song List</div>;
+    return <div className="ui divided list">{this.renderList()}</div>;
   }
 }
 
 // take the state object (all the data from our Redux store) and run some computations on it thats going to cause that data to show up as "props" inside of our component
 // Since we are taking the state from the Redux Store we pass it in as a param (before the =>)
-// The state in this case is just the entire list of songs and the currently selected song from the Redux Store
+// The state in this case is just the entire list of songs and the currently selected song from the Redux Store. Since this component only needs the list of songs we will create a field called "songs" and pull the list from the state object with "state.songs" Now the list of songs will be available as props to this component. So if we say "this.props" the "props" will be "songs: state.songs", or the list of songs
 // We will configure connect by passing in this mapStateToProps variable as the first argument
-const mapStateToProps = state => {};
+const mapStateToProps = state => {
+  return { songs: state.songs };
+};
 
 // connect uses 2 sets of parantheses here. This is b/c connect returns a function. If we wanted to just return the function we might say connect(). But to invoke that function that connect is returning we will use connect()()
 // The kinds of things you can pass into the 1st and 2nd pair of parantheses are different:
